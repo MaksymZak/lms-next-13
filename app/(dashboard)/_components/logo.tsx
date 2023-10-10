@@ -1,14 +1,17 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const Logo = () => {
   return (
-    <Image
-      className="h-auto"
-      alt="logo"
-      src="/logo.svg"
-      width={130}
-      height={130}
-    />
+    <Link href={"/"} className="cursor-pointer">
+      <Image
+        className="h-auto"
+        alt="logo"
+        src="/logo.svg"
+        width={130}
+        height={130}
+      />
+    </Link>
   );
 };
 
