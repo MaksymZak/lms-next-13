@@ -50,8 +50,8 @@ const CreatePage = () => {
       <div>
         <h1 className="text-2xl font-bold">Name your course</h1>
         <p className=" text-sm text-slate-600">
-          What would you like to name you course? Don't worry, you can change
-          this later.
+          What would you like to name you course? Don&apos;t worry, you can
+          change this later.
         </p>
 
         <Form {...form}>
