@@ -6,7 +6,13 @@
     "dev": "next dev",
     "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "check-format": "prettier --check .",
+    "format": "prettier --write .",
+    "test": "yarn check-format && yarn lint && yarn format",
+    "fix": "yarn format && yarn lint --fix",
+    "test-all": "yarn check-format && yarn lint && yarn build",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.25.1",
