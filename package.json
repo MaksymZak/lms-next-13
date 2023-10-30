@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "check-format": "prettier --check .",
@@ -12,7 +12,8 @@
     "test": "yarn check-format && yarn lint && yarn format",
     "fix": "yarn format && yarn lint --fix",
     "test-all": "yarn check-format && yarn lint && yarn build",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.25.1",
