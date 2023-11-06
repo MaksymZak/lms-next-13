@@ -7,6 +7,8 @@ import { redirect } from "next/navigation";
 import IconBadge from "@/components/icon-badge";
 import TitleForm from "./_components/title-form";
 import DescriptionForm from "./_components/description-form";
+import ImageForm from "./_components/image-form";
+import CategoryForm from "./_components/category-form";
 
 const CourseByIdPage = async ({ params }: { params: { courseId: string } }) => {
   const { userId } = auth();
@@ -16,6 +18,8 @@ const CourseByIdPage = async ({ params }: { params: { courseId: string } }) => {
   }
 
   const course = await db.course.findUnique({ where: { id: params.courseId } });
+
+  const categories = await db.category.findMany({ orderBy: { name: "asc" } });
 
   if (!course) {
     return redirect("/");
@@ -51,13 +55,16 @@ const CourseByIdPage = async ({ params }: { params: { courseId: string } }) => {
         </div>
       </div>
       <TitleForm courseId={course.id} initialData={course} />
-      <DescriptionForm
+      <DescriptionForm courseId={course.id} initialData={course} />
+      <ImageForm courseId={course.id} initialData={course} />
+
+      <CategoryForm
         courseId={course.id}
-        initialData={
-          course?.description
-            ? { description: course?.description }
-            : { description: "" }
-        }
+        initialData={course}
+        options={categories.map((category) => ({
+          label: category.name,
+          value: category.id,
+        }))}
       />
     </div>
   );
