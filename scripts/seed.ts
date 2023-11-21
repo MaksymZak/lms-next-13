@@ -34,7 +34,7 @@ async function main() {
   } catch (error) {
     console.log("Error seeding the database categories", error);
   } finally {
-    console.log("Disconect");
+    console.log("Disconnect");
     await database.$disconnect();
   }
 }
