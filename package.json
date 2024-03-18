@@ -13,12 +13,13 @@
     "fix": "pnpm format && pnpm lint --fix",
     "test-all": "pnpm check-format && pnpm lint && pnpm build",
     "prepare": "husky install",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "start-db": "docker start lms_mysql || docker run --name lms_mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 -d mysql:latest",
+    "stop-db": "docker stop lms_mysql"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.25.1",
     "@hookform/resolvers": "^3.3.1",
-    "@prisma/client": "^5.9.1",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-popover": "^1.0.7",
@@ -50,11 +51,12 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@prisma/client": "^5.11.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-react": "^7.33.2",
     "husky": "^8.0.0",
     "prettier": "^3.0.3",
     "prettier-plugin-tailwindcss": "^0.5.4",
-    "prisma": "^5.5.2"
+    "prisma": "^5.11.0"
   }
 }
