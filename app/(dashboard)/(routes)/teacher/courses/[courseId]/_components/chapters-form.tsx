@@ -14,33 +14,40 @@ import {
 } from "@/components/ui/form";
 
 import { Button } from "@/components/ui/button";
-import { Pencil } from "lucide-react";
+import { Loader2, PlusCircle } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Textarea } from "@/components/ui/textarea";
-import { Course } from "@prisma/client";
+
+import { Chapter, Course } from "@prisma/client";
+
+import { Input } from "@/components/ui/input";
+import ChaptersList from "./chapters-list";
 
 interface ChaptersFormProps {
-  initialData: Course;
+  initialData: Course & { chapters: Chapter[] };
   courseId: string;
 }
 
 const formSchema = z.object({
-  description: z.string().min(1, { message: "Description is required" }),
+  title: z.string().min(1),
 });
 
 const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const toggleEdit = () => setIsEditing((current) => !current);
+  const [isCreating, setIsCreating] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  const toggleCreating = () => {
+    setIsCreating((current) => !current);
+  };
 
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      description: initialData?.description || "",
+      title: "",
     },
   });
 
@@ -48,41 +55,56 @@ const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.patch(`/api/courses/${courseId}`, values);
-      toast.success("Course update");
-      toggleEdit();
+      await axios.post(`/api/courses/${courseId}/chapters`, values);
+      toast.success("Chapter created");
+      toggleCreating();
       router.refresh();
     } catch (error) {
       toast.error("Something went wrong");
     }
   };
 
+  const onReorder = async (updateData: { id: string; position: number }[]) => {
+    try {
+      setIsUpdating(true);
+      await axios.put(`/api/courses/${courseId}/chapters/reorder`, {
+        list: updateData,
+      });
+      toast.success("Chapters reordered");
+      router.refresh();
+    } catch (error) {
+      toast.error("Something went wrong");
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const onEdit = (id: string) => {
+    router.push(`/teacher/courses/${courseId}/chapters/${id}`);
+  };
+
   return (
-    <div className="mt-6 rounded-md border bg-slate-100 p-4">
+    <div className="relative mt-6 rounded-md border bg-slate-100 p-4">
+      {isUpdating && (
+        <div className="absolute right-0 top-0 flex h-full w-full items-center justify-center rounded-md bg-slate-500/20">
+          <Loader2 className="size-6 animate-spin text-sky-700" />
+        </div>
+      )}
       <div className="flex items-center justify-between font-medium">
-        Course description
-        <Button onClick={toggleEdit} variant={"ghost"}>
-          {isEditing ? (
+        Course chapters
+        <Button onClick={toggleCreating} variant={"ghost"}>
+          {isCreating ? (
             <>Cancel</>
           ) : (
             <>
-              <Pencil className="mr-2 h-4 w-4" />
-              Edit description
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Add a chapter
             </>
           )}
         </Button>
       </div>
-      {!isEditing && (
-        <p
-          className={cn(
-            "mt-2 text-sm",
-            !initialData.description && "italic text-slate-500",
-          )}
-        >
-          {initialData.description || "No description"}
-        </p>
-      )}
-      {isEditing && (
+
+      {isCreating && (
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -90,13 +112,13 @@ const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
           >
             <FormField
               control={form.control}
-              name="description"
+              name="title"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Textarea
+                    <Input
                       disabled={isSubmitting}
-                      placeholder="e.g. 'This course is about...'"
+                      placeholder="e.g. 'Introduction to the course'"
                       {...field}
                     />
                   </FormControl>
@@ -104,13 +126,33 @@ const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
                 </FormItem>
               )}
             />
-            <div className="flex items-center gap-x-2">
-              <Button type="submit" disabled={isSubmitting || !isValid}>
-                Save
-              </Button>
-            </div>
+
+            <Button type="submit" disabled={isSubmitting || !isValid}>
+              Create
+            </Button>
           </form>
         </Form>
+      )}
+      {!isCreating && (
+        <p
+          className={cn(
+            "mt-2 text-sm",
+            !initialData.chapters.length && "italic text-slate-500",
+          )}
+        >
+          {!initialData.chapters.length && "No chapters"}
+          <ChaptersList
+            items={initialData.chapters || []}
+            onEdit={onEdit}
+            onReorder={onReorder}
+          />
+        </p>
+      )}
+
+      {!isCreating && (
+        <p className="mt-4 text-xs text-muted-foreground">
+          Drag and drop to reorder the chapters
+        </p>
       )}
     </div>
   );

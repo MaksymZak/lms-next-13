@@ -8,6 +8,9 @@ dependencies:
   "@clerk/nextjs":
     specifier: ^4.25.1
     version: 4.27.1(next@13.4.12)(react-dom@18.2.0)(react@18.2.0)
+  "@hello-pangea/dnd":
+    specifier: ^16.6.0
+    version: 16.6.0(@types/react-dom@18.2.8)(@types/react@18.2.24)(react-dom@18.2.0)(react@18.2.0)
   "@hookform/resolvers":
     specifier: ^3.3.1
     version: 3.3.2(react-hook-form@7.48.2)
@@ -84,11 +87,11 @@ dependencies:
     specifier: ^1.14.0
     version: 1.14.0
   tailwindcss:
-    specifier: 3.3.3
-    version: 3.3.3
+    specifier: 3.4.3
+    version: 3.4.3
   tailwindcss-animate:
     specifier: ^1.0.7
-    version: 1.0.7(tailwindcss@3.3.3)
+    version: 1.0.7(tailwindcss@3.4.3)
   typescript:
     specifier: 5.2.2
     version: 5.2.2
@@ -101,8 +104,8 @@ dependencies:
 
 devDependencies:
   "@prisma/client":
-    specifier: ^5.11.0
-    version: 5.11.0(prisma@5.11.0)
+    specifier: ^5.12.1
+    version: 5.12.1(prisma@5.12.1)
   eslint-config-prettier:
     specifier: ^9.0.0
     version: 9.0.0(eslint@8.50.0)
@@ -119,8 +122,8 @@ devDependencies:
     specifier: ^0.5.4
     version: 0.5.7(prettier@3.1.0)
   prisma:
-    specifier: ^5.11.0
-    version: 5.11.0
+    specifier: ^5.12.1
+    version: 5.12.1
 
 packages:
   /@aashutoshrathi/word-wrap@1.2.6:
@@ -142,6 +145,16 @@ packages:
     resolution:
       {
         integrity: sha512-2Yv65nlWnWlSpe3fXEyX5i7fx5kIKo4Qbcj+hMO0odwaneFjfXw5fdum+4yL20O0QiaHpia0cYQ9xpNMqrBwHg==,
+      }
+    engines: { node: ">=6.9.0" }
+    dependencies:
+      regenerator-runtime: 0.14.0
+    dev: false
+
+  /@babel/runtime@7.24.4:
+    resolution:
+      {
+        integrity: sha512-dkxf7+hn8mFBwKjs9bvBlArzLVxVbS8usaPUDd5p2a9JCL9tB8OaOVN1isD4+Xyk4ns89/xeOmbQvgdK7IIVdA==,
       }
     engines: { node: ">=6.9.0" }
     dependencies:
@@ -336,6 +349,30 @@ packages:
       {
         integrity: sha512-OfX7E2oUDYxtBvsuS4e/jSn4Q9Qb6DzgeYtsAdkPZ47znpoNsMgZw0+tVijiv3uGNR6dgNlty6r9rzIzHjtd/A==,
       }
+    dev: false
+
+  /@hello-pangea/dnd@16.6.0(@types/react-dom@18.2.8)(@types/react@18.2.24)(react-dom@18.2.0)(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-vfZ4GydqbtUPXSLfAvKvXQ6xwRzIjUSjVU0Sx+70VOhc2xx6CdmJXJ8YhH70RpbTUGjxctslQTHul9sIOxCfFQ==,
+      }
+    peerDependencies:
+      react: ^16.8.5 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.5 || ^17.0.0 || ^18.0.0
+    dependencies:
+      "@babel/runtime": 7.24.4
+      css-box-model: 1.2.1
+      memoize-one: 6.0.0
+      raf-schd: 4.0.3
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      react-redux: 8.1.3(@types/react-dom@18.2.8)(@types/react@18.2.24)(react-dom@18.2.0)(react@18.2.0)(redux@4.2.1)
+      redux: 4.2.1
+      use-memo-one: 1.1.3(react@18.2.0)
+    transitivePeerDependencies:
+      - "@types/react"
+      - "@types/react-dom"
+      - react-native
     dev: false
 
   /@hookform/resolvers@3.3.2(react-hook-form@7.48.2):
@@ -606,10 +643,10 @@ packages:
       webcrypto-core: 1.7.7
     dev: false
 
-  /@prisma/client@5.11.0(prisma@5.11.0):
+  /@prisma/client@5.12.1(prisma@5.12.1):
     resolution:
       {
-        integrity: sha512-SWshvS5FDXvgJKM/a0y9nDC1rqd7KG0Q6ZVzd+U7ZXK5soe73DJxJJgbNBt2GNXOa+ysWB4suTpdK5zfFPhwiw==,
+        integrity: sha512-6/JnizEdlSBxDIdiLbrBdMW5NqDxOmhXAJaNXiPpgzAPr/nLZResT6MMpbOHLo5yAbQ1Vv5UU8PTPRzb0WIxdA==,
       }
     engines: { node: ">=16.13" }
     requiresBuild: true
@@ -619,54 +656,54 @@ packages:
       prisma:
         optional: true
     dependencies:
-      prisma: 5.11.0
+      prisma: 5.12.1
     dev: true
 
-  /@prisma/debug@5.11.0:
+  /@prisma/debug@5.12.1:
     resolution:
       {
-        integrity: sha512-N6yYr3AbQqaiUg+OgjkdPp3KPW1vMTAgtKX6+BiB/qB2i1TjLYCrweKcUjzOoRM5BriA4idrkTej9A9QqTfl3A==,
+        integrity: sha512-kd/wNsR0klrv79o1ITsbWxYyh4QWuBidvxsXSParPsYSu0ircUmNk3q4ojsgNc3/81b0ozg76iastOG43tbf8A==,
       }
     dev: true
 
-  /@prisma/engines-version@5.11.0-15.efd2449663b3d73d637ea1fd226bafbcf45b3102:
+  /@prisma/engines-version@5.12.0-21.473ed3124229e22d881cb7addf559799debae1ab:
     resolution:
       {
-        integrity: sha512-WXCuyoymvrS4zLz4wQagSsc3/nE6CHy8znyiMv8RKazKymOMd5o9FP5RGwGHAtgoxd+aB/BWqxuP/Ckfu7/3MA==,
+        integrity: sha512-6yvO8s80Tym61aB4QNtYZfWVmE3pwqe807jEtzm8C5VDe7nw8O1FGX3TXUaXmWV0fQTIAfRbeL2Gwrndabp/0g==,
       }
     dev: true
 
-  /@prisma/engines@5.11.0:
+  /@prisma/engines@5.12.1:
     resolution:
       {
-        integrity: sha512-gbrpQoBTYWXDRqD+iTYMirDlF9MMlQdxskQXbhARhG6A/uFQjB7DZMYocMQLoiZXO/IskfDOZpPoZE8TBQKtEw==,
+        integrity: sha512-HQDdglLw2bZR/TXD2Y+YfDMvi5Q8H+acbswqOsWyq9pPjBLYJ6gzM+ptlTU/AV6tl0XSZLU1/7F4qaWa8bqpJA==,
       }
     requiresBuild: true
     dependencies:
-      "@prisma/debug": 5.11.0
-      "@prisma/engines-version": 5.11.0-15.efd2449663b3d73d637ea1fd226bafbcf45b3102
-      "@prisma/fetch-engine": 5.11.0
-      "@prisma/get-platform": 5.11.0
+      "@prisma/debug": 5.12.1
+      "@prisma/engines-version": 5.12.0-21.473ed3124229e22d881cb7addf559799debae1ab
+      "@prisma/fetch-engine": 5.12.1
+      "@prisma/get-platform": 5.12.1
     dev: true
 
-  /@prisma/fetch-engine@5.11.0:
+  /@prisma/fetch-engine@5.12.1:
     resolution:
       {
-        integrity: sha512-994viazmHTJ1ymzvWugXod7dZ42T2ROeFuH6zHPcUfp/69+6cl5r9u3NFb6bW8lLdNjwLYEVPeu3hWzxpZeC0w==,
+        integrity: sha512-qSs3KcX1HKcea1A+hlJVK/ljj0PNIUHDxAayGMvgJBqmaN32P9tCidlKz1EGv6WoRFICYnk3Dd/YFLBwnFIozA==,
       }
     dependencies:
-      "@prisma/debug": 5.11.0
-      "@prisma/engines-version": 5.11.0-15.efd2449663b3d73d637ea1fd226bafbcf45b3102
-      "@prisma/get-platform": 5.11.0
+      "@prisma/debug": 5.12.1
+      "@prisma/engines-version": 5.12.0-21.473ed3124229e22d881cb7addf559799debae1ab
+      "@prisma/get-platform": 5.12.1
     dev: true
 
-  /@prisma/get-platform@5.11.0:
+  /@prisma/get-platform@5.12.1:
     resolution:
       {
-        integrity: sha512-rxtHpMLxNTHxqWuGOLzR2QOyQi79rK1u1XYAVLZxDGTLz/A+uoDnjz9veBFlicrpWjwuieM4N6jcnjj/DDoidw==,
+        integrity: sha512-pgIR+pSvhYHiUcqXVEZS31NrFOTENC9yFUdEAcx7cdQBoZPmHVjtjN4Ss6NzVDMYPrKJJ51U14EhEoeuBlMioQ==,
       }
     dependencies:
-      "@prisma/debug": 5.11.0
+      "@prisma/debug": 5.12.1
     dev: true
 
   /@radix-ui/primitive@1.0.0:
@@ -1467,6 +1504,16 @@ packages:
       "@types/serve-static": 1.15.5
     dev: false
 
+  /@types/hoist-non-react-statics@3.3.5:
+    resolution:
+      {
+        integrity: sha512-SbcrWzkKBw2cdwRTwQAswfpB9g9LJWfjtUeW/jvNwbhC8cpmmNYVePa+ncbUe0rGTQ7G3Ff6mYUN2VMfLVr+Sg==,
+      }
+    dependencies:
+      "@types/react": 18.2.24
+      hoist-non-react-statics: 3.3.2
+    dev: false
+
   /@types/http-errors@2.0.4:
     resolution:
       {
@@ -1593,6 +1640,13 @@ packages:
       "@types/http-errors": 2.0.4
       "@types/mime": 3.0.4
       "@types/node": 20.8.2
+    dev: false
+
+  /@types/use-sync-external-store@0.0.3:
+    resolution:
+      {
+        integrity: sha512-EwmlvuaxPNej9+T4v5AuBPJa2x2UOJVdjCtDHgcDqitUeOtjnJKJ+apYjVcAoBEMjKW1VVFGZLUb5+qqa09XFA==,
+      }
     dev: false
 
   /@typescript-eslint/parser@5.62.0(eslint@8.50.0)(typescript@5.2.2):
@@ -2247,6 +2301,15 @@ packages:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+
+  /css-box-model@1.2.1:
+    resolution:
+      {
+        integrity: sha512-a7Vr4Q/kd/aw96bnJG332W9V9LkJO69JRcaCYDUqjp6/z0w6VcZjgAcTbgFxEPfBgdnAwlh3iwu+hLopa+flJw==,
+      }
+    dependencies:
+      tiny-invariant: 1.3.3
+    dev: false
 
   /cssesc@3.0.0:
     resolution:
@@ -3292,6 +3355,15 @@ packages:
     dependencies:
       function-bind: 1.1.2
 
+  /hoist-non-react-statics@3.3.2:
+    resolution:
+      {
+        integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==,
+      }
+    dependencies:
+      react-is: 16.13.1
+    dev: false
+
   /husky@8.0.3:
     resolution:
       {
@@ -3788,6 +3860,13 @@ packages:
         integrity: sha512-hdN1wVrZbb29eBGiGjJbeP8JbKjq1urkHJ/LIP/NY48MZ1QVXUsQBV1G1zvYFHn1XE06cwjBsOI2K3Ulnj1YXQ==,
       }
     engines: { node: ">=8" }
+    dev: false
+
+  /memoize-one@6.0.0:
+    resolution:
+      {
+        integrity: sha512-rkpe71W0N0c0Xz6QD0eJETuWAJGnJ9afsl1srmwPrI+yBCkge5EycXXbYRyvL29zZVUWQCY7InPRCv3GDXuZNw==,
+      }
     dev: false
 
   /merge2@1.4.1:
@@ -4360,16 +4439,16 @@ packages:
     hasBin: true
     dev: true
 
-  /prisma@5.11.0:
+  /prisma@5.12.1:
     resolution:
       {
-        integrity: sha512-KCLiug2cs0Je7kGkQBN9jDWoZ90ogE/kvZTUTgz2h94FEo8pczCkPH7fPNXkD1sGU7Yh65risGGD1HQ5DF3r3g==,
+        integrity: sha512-SkMnb6wyIxTv9ACqiHBI2u9gD6y98qXRoCoLEnZsF6yee5Qg828G+ARrESN+lQHdw4maSZFFSBPPDpvSiVTo0Q==,
       }
     engines: { node: ">=16.13" }
     hasBin: true
     requiresBuild: true
     dependencies:
-      "@prisma/engines": 5.11.0
+      "@prisma/engines": 5.12.1
     dev: true
 
   /prop-types@15.8.1:
@@ -4425,6 +4504,13 @@ packages:
         integrity: sha512-ARhCpm70fzdcvNQfPoy49IaanKkTlRWF2JMzqhcJbhSFRZv7nPTvZJdcY7301IPmvW+/p0RgIWnQDLJxifsQ7g==,
       }
     engines: { node: ">=8" }
+    dev: false
+
+  /raf-schd@4.0.3:
+    resolution:
+      {
+        integrity: sha512-tQkJl2GRWh83ui2DiPTJz9wEiMN20syf+5oKfB03yYP7ioZcJwsIK8FjrtLwH1m7C7e+Tt2yYBlrOpdT+dyeIQ==,
+      }
     dev: false
 
   /react-dom@18.2.0(react@18.2.0):
@@ -4489,6 +4575,50 @@ packages:
       {
         integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==,
       }
+
+  /react-is@18.2.0:
+    resolution:
+      {
+        integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==,
+      }
+    dev: false
+
+  /react-redux@8.1.3(@types/react-dom@18.2.8)(@types/react@18.2.24)(react-dom@18.2.0)(react@18.2.0)(redux@4.2.1):
+    resolution:
+      {
+        integrity: sha512-n0ZrutD7DaX/j9VscF+uTALI3oUPa/pO4Z3soOBIjuRn/FzVu6aehhysxZCLi6y7duMf52WNZGMl7CtuK5EnRw==,
+      }
+    peerDependencies:
+      "@types/react": ^16.8 || ^17.0 || ^18.0
+      "@types/react-dom": ^16.8 || ^17.0 || ^18.0
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+      react-native: ">=0.59"
+      redux: ^4 || ^5.0.0-beta.0
+    peerDependenciesMeta:
+      "@types/react":
+        optional: true
+      "@types/react-dom":
+        optional: true
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+      redux:
+        optional: true
+    dependencies:
+      "@babel/runtime": 7.24.4
+      "@types/hoist-non-react-statics": 3.3.5
+      "@types/react": 18.2.24
+      "@types/react-dom": 18.2.8
+      "@types/use-sync-external-store": 0.0.3
+      hoist-non-react-statics: 3.3.2
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      react-is: 18.2.0
+      redux: 4.2.1
+      use-sync-external-store: 1.2.0(react@18.2.0)
+    dev: false
 
   /react-remove-scroll-bar@2.3.4(@types/react@18.2.24)(react@18.2.0):
     resolution:
@@ -4600,6 +4730,15 @@ packages:
     engines: { node: ">=8.10.0" }
     dependencies:
       picomatch: 2.3.1
+    dev: false
+
+  /redux@4.2.1:
+    resolution:
+      {
+        integrity: sha512-LAUYz4lc+Do8/g7aeRa8JkyDErK6ekstQaqWQrNRW//MY1TvCEpMtpTWvlQ+FPbWCx+Xixu/6SHt5N0HR+SB4w==,
+      }
+    dependencies:
+      "@babel/runtime": 7.24.4
     dev: false
 
   /reflect.getprototypeof@1.0.4:
@@ -4993,7 +5132,7 @@ packages:
       }
     dev: false
 
-  /tailwindcss-animate@1.0.7(tailwindcss@3.3.3):
+  /tailwindcss-animate@1.0.7(tailwindcss@3.4.3):
     resolution:
       {
         integrity: sha512-bl6mpH3T7I3UFxuvDEXLxy/VuFxBk5bbzplh7tXI68mwMokNYd1t9qPBHlnyTwfa4JGC4zP516I1hYYtQ/vspA==,
@@ -5001,13 +5140,13 @@ packages:
     peerDependencies:
       tailwindcss: ">=3.0.0 || insiders"
     dependencies:
-      tailwindcss: 3.3.3
+      tailwindcss: 3.4.3
     dev: false
 
-  /tailwindcss@3.3.3:
+  /tailwindcss@3.4.3:
     resolution:
       {
-        integrity: sha512-A0KgSkef7eE4Mf+nKJ83i75TMyq8HqY3qmFIJSWy8bNt0v1lG7jUcpGpoTFxAwYcWOphcTBLPPJg+bDfhDf52w==,
+        integrity: sha512-U7sxQk/n397Bmx4JHbJx/iSOOv5G+II3f1kpLpY2QeUv5DcPdcTsYLlusZfq1NthHS1c1cZoyFmmkex1rzke0A==,
       }
     engines: { node: ">=14.0.0" }
     hasBin: true
@@ -5069,6 +5208,13 @@ packages:
       }
     dependencies:
       any-promise: 1.3.0
+    dev: false
+
+  /tiny-invariant@1.3.3:
+    resolution:
+      {
+        integrity: sha512-+FbBPE1o9QAYvviau/qC5SE3caw21q3xkvWKBtja5vgqOWIHHJ3ioaq1VPfn/Szqctz2bU/oYeKd9/z5BL+PVg==,
+      }
     dev: false
 
   /to-no-case@1.0.2:
@@ -5298,6 +5444,17 @@ packages:
       "@types/react": 18.2.24
       react: 18.2.0
       tslib: 2.6.2
+    dev: false
+
+  /use-memo-one@1.1.3(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-g66/K7ZQGYrI6dy8GLpVcMsBp4s17xNkYJVSMvTEevGy3nDxHOfE6z8BVE22+5G5x7t3+bhzrlTDB7ObrEE0cQ==,
+      }
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /use-sidecar@1.1.2(@types/react@18.2.24)(react@18.2.0):
