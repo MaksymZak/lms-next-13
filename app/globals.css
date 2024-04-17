@@ -81,4 +81,8 @@ body,
   }
 }
 
+.ql-container {
+  @apply !text-base;
+}
+
 @import "~@uploadthing/react/styles.css";
