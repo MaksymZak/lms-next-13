@@ -7,30 +7,40 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 
+import { SearchInput } from "./search-input";
+
 const NavbarRoutes = () => {
   const pathname = usePathname();
 
   const isTeacherPage = pathname?.startsWith("/teacher");
-  const isPlayerPage = pathname?.startsWith("/chapter");
+  const isCoursePage = pathname?.includes("/courses");
+  const isSearchPage = pathname === "/search";
 
   return (
-    <div className="ml-auto flex items-center gap-x-2">
-      {isTeacherPage || isPlayerPage ? (
-        <Link href={"/"}>
-          <Button className="gap-x-1" size={"sm"} variant={"ghost"}>
-            <LogOut /> Exit
-          </Button>
-        </Link>
-      ) : (
-        <Link href={"/teacher/courses"}>
-          <Button size={"sm"} variant={"ghost"}>
-            Teacher mode
-          </Button>
-        </Link>
+    <>
+      {isSearchPage && (
+        <div className="hidden md:block">
+          <SearchInput />
+        </div>
       )}
-
-      <UserButton afterSignOutUrl="/" />
-    </div>
+      <div className="ml-auto flex gap-x-2">
+        {isTeacherPage || isCoursePage ? (
+          <Link href="/">
+            <Button className="sm" variant="ghost">
+              <LogOut className="mr-2 h-4 w-4" />
+              Exit
+            </Button>
+          </Link>
+        ) : (
+          <Link href="/teacher/courses">
+            <Button className="sm" variant="ghost">
+              Teacher mode
+            </Button>
+          </Link>
+        )}
+        <UserButton afterSignOutUrl="/" />
+      </div>
+    </>
   );
 };
 
