@@ -9,13 +9,13 @@ importers:
   .:
     dependencies:
       '@clerk/nextjs':
-        specifier: ^4.25.1
+        specifier: ^4.27.1
         version: 4.27.1(next@13.4.12(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@hello-pangea/dnd':
         specifier: ^16.6.0
         version: 16.6.0(@types/react-dom@18.2.8)(@types/react@18.2.24)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@hookform/resolvers':
-        specifier: ^3.3.1
+        specifier: ^3.3.2
         version: 3.3.2(react-hook-form@7.48.2(react@18.2.0))
       '@mux/mux-node':
         specifier: ^8.5.1
@@ -66,7 +66,7 @@ importers:
         specifier: 10.4.16
         version: 10.4.16(postcss@8.4.31)
       axios:
-        specifier: ^1.5.1
+        specifier: ^1.6.2
         version: 1.6.2
       class-variance-authority:
         specifier: ^0.7.0
@@ -108,7 +108,7 @@ importers:
         specifier: ^14.2.3
         version: 14.2.3(react@18.2.0)
       react-hook-form:
-        specifier: ^7.47.0
+        specifier: ^7.48.2
         version: 7.48.2(react@18.2.0)
       react-hot-toast:
         specifier: ^2.4.1
@@ -151,13 +151,13 @@ importers:
         specifier: ^7.33.2
         version: 7.33.2(eslint@8.50.0)
       husky:
-        specifier: ^8.0.0
+        specifier: ^8.0.3
         version: 8.0.3
       prettier:
-        specifier: ^3.0.3
+        specifier: ^3.1.0
         version: 3.1.0
       prettier-plugin-tailwindcss:
-        specifier: ^0.5.4
+        specifier: ^0.5.7
         version: 0.5.7(prettier@3.1.0)
       prisma:
         specifier: ^5.12.1
@@ -1158,8 +1158,8 @@ packages:
     resolution: {integrity: sha512-L28STB170nwWS63UjtlEOE3dldQApaJXZkOI1uMFfzf3rRuPegHaHesyee+YxQ+W6SvRDQV6UrdOdRiR153wJg==}
     engines: {node: '>=6'}
 
-  caniuse-lite@1.0.30001563:
-    resolution: {integrity: sha512-na2WUmOxnwIZtwnFI2CZ/3er0wdNzU7hN+cPYz/z2ajHThnkWjNBOpEPP4n+4r2WPM847JaMotaJE3bnfzjyKw==}
+  caniuse-lite@1.0.30001617:
+    resolution: {integrity: sha512-mLyjzNI9I+Pix8zwcrpxEbGlfqOkF9kM3ptzmKNw5tizSyYwMe+nGLTqMK9cO+0E+Bh6TsBxNAaHWEM8xwSsmA==}
 
   castable-video@1.0.6:
     resolution: {integrity: sha512-Ykw2uL4ZQnqX0j9KF9ksbDpyc8I53mFMswCKW9yV5TrwpWkdNqRHLlcU85W30BIw61fgDjgm0Xh5G0rbcmv23g==}
@@ -3836,7 +3836,7 @@ snapshots:
   autoprefixer@10.4.16(postcss@8.4.31):
     dependencies:
       browserslist: 4.22.1
-      caniuse-lite: 1.0.30001563
+      caniuse-lite: 1.0.30001617
       fraction.js: 4.3.7
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -3874,7 +3874,7 @@ snapshots:
 
   browserslist@4.22.1:
     dependencies:
-      caniuse-lite: 1.0.30001563
+      caniuse-lite: 1.0.30001617
       electron-to-chromium: 1.4.589
       node-releases: 2.0.13
       update-browserslist-db: 1.0.13(browserslist@4.22.1)
@@ -3909,7 +3909,7 @@ snapshots:
 
   camelcase@5.3.1: {}
 
-  caniuse-lite@1.0.30001563: {}
+  caniuse-lite@1.0.30001617: {}
 
   castable-video@1.0.6:
     dependencies:
@@ -4829,7 +4829,7 @@ snapshots:
       '@next/env': 13.4.12
       '@swc/helpers': 0.5.1
       busboy: 1.6.0
-      caniuse-lite: 1.0.30001563
+      caniuse-lite: 1.0.30001617
       postcss: 8.4.14
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
