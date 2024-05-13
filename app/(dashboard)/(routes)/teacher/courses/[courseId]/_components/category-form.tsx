@@ -3,7 +3,7 @@
 import * as z from "zod";
 import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, FieldValues } from "react-hook-form";
 
 import {
   Form,
@@ -101,14 +101,21 @@ const CategoryForm = ({
             <FormField
               control={form.control}
               name="categoryId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Combobox options={...options} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              render={({ field }: { field: FieldValues }) => {
+                const { onChange, ...restField } = field;
+                return (
+                  <FormItem>
+                    <FormControl>
+                      <Combobox
+                        options={options}
+                        {...restField}
+                        onChange={onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
             />
             <div className="flex items-center gap-x-2">
               <Button type="submit" disabled={isSubmitting || !isValid}>

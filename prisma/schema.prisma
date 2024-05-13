@@ -35,7 +35,6 @@ model Course {
 
   @@index([categoryId])
   @@fulltext([title])
-
 }
 
 model Category {
