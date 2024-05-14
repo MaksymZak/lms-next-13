@@ -16,7 +16,7 @@
     "postinstall": "prisma generate",
     "start-db": "docker start lms_postgres || docker run --name lms_postgres -p 5432:5432 -e POSTGRES_PASSWORD=123456 -d postgres:latest",
     "stop-db": "docker stop lms_postgres",
-    "vercel-build": "prisma generate && prisma db push && node scripts/seed.ts && next build"
+    "vercel-build": "prisma generate && prisma db push && next build"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.27.1",
