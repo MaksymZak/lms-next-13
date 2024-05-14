@@ -14,8 +14,8 @@
     "test-all": "pnpm check-format && pnpm lint && pnpm build",
     "prepare": "husky install",
     "postinstall": "prisma generate",
-    "start-db": "docker start lms_mysql || docker run --name lms_mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 -d mysql:latest",
-    "stop-db": "docker stop lms_mysql"
+    "start-db": "docker start lms_postgres || docker run --name lms_postgres -p 5432:5432 -e POSTGRES_PASSWORD=123456 -d postgres:latest",
+    "stop-db": "docker stop lms_postgres"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.27.1",
