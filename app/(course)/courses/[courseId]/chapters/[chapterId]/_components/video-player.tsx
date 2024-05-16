@@ -1,11 +1,11 @@
 "use client";
 
 import axios from "axios";
-import MuxPlayer from "@mux/mux-player-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Loader2, Lock } from "lucide-react";
+import ReactPlayer from "react-player";
 
 import { cn } from "@/lib/utils";
 import { useConfettiStore } from "@/hooks/use-confetti-store";
@@ -18,20 +18,22 @@ interface VideoPlayerProps {
   isLocked: boolean;
   completeOnEnd: boolean;
   title: string;
+  url: string;
 }
 
 export const VideoPlayer = ({
-  playbackId,
   chapterId,
   courseId,
   nextChapterId,
   isLocked,
   completeOnEnd,
-  title,
+  url,
 }: VideoPlayerProps) => {
   const [isReady, setIsReady] = useState(false);
   const router = useRouter();
   const confetti = useConfettiStore();
+
+  useEffect(() => {}, [isReady]);
 
   const onEnd = async () => {
     try {
@@ -72,18 +74,18 @@ export const VideoPlayer = ({
           <p className="text-sm">This chapter is locked</p>
         </div>
       )}
-      {!isLocked && (
-        <MuxPlayer
-          title={title}
-          className={cn(!isReady && "hidden")}
-          onCanPlay={() => setIsReady(true)}
+
+      {!isLocked && url && (
+        <ReactPlayer
+          className={cn(isReady && "hidden")}
+          playing
+          width="100%"
+          height="100%"
           onEnded={onEnd}
-          autoPlay
-          playbackId={playbackId}
-          onError={(error) => {
-            console.error(error);
-            toast.error("Video playback error");
-          }}
+          onPlay={() => setIsReady(true)}
+          controls={true}
+          url={url}
+          volume={1}
         />
       )}
     </div>

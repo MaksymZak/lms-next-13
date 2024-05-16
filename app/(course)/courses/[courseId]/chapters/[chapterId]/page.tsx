@@ -57,6 +57,7 @@ const ChapterIdPage = async ({
       <div className="mx-auto flex max-w-4xl flex-col pb-20">
         <div className="p-4">
           <VideoPlayer
+            url={chapter?.videoUrl!}
             chapterId={params.chapterId}
             title={chapter.title}
             courseId={params.chapterId}
