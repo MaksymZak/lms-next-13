@@ -11,6 +11,7 @@ import ChapterTitleForm from "./_components/chapter-title-form";
 import ChapterDescriptionForm from "./_components/chapter-description-form";
 import ChapterAccessForm from "./_components/chapter-access-form";
 import { ChapterVideoForm } from "./_components/chapter-video-form";
+import { cn } from "@/lib/utils";
 
 const ChapterIdPage = async ({
   params,
@@ -67,7 +68,12 @@ const ChapterIdPage = async ({
             <div className="flex w-full items-center justify-between">
               <div className="flex flex-col gap-y-2">
                 <h1 className="text-2xl font-medium">Chapter Creation</h1>
-                <span className="text-sm text-slate-700">
+                <span
+                  className={cn(
+                    "text-sm text-red-700",
+                    completedFields === totalFields && "text-green-500",
+                  )}
+                >
                   Complete all fields {completionText}
                 </span>
               </div>

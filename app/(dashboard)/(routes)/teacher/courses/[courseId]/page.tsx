@@ -19,6 +19,7 @@ import AttachmentForm from "./_components/attachment-form";
 import ChaptersForm from "./_components/chapters-form";
 import { Actions } from "./_components/actions";
 import { Banner } from "@/components/banner";
+import { cn } from "@/lib/utils";
 
 const CourseByIdPage = async ({ params }: { params: { courseId: string } }) => {
   const { userId } = auth();
@@ -70,7 +71,12 @@ const CourseByIdPage = async ({ params }: { params: { courseId: string } }) => {
         <div className="flex items-center justify-between">
           <div className="flex flex-col gap-y-2">
             <h1 className="text-2xl font-medium">Course Setup</h1>
-            <span className="text-sm text-slate-700">
+            <span
+              className={cn(
+                "text-sm text-red-500",
+                completedFields === totalFields && "text-green-500",
+              )}
+            >
               Complete all fields {completionText}
             </span>
           </div>

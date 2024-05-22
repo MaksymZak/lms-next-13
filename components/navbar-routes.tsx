@@ -28,20 +28,20 @@ export const NavbarRoutes = () => {
       <div className="ml-auto flex gap-x-2">
         {isTeacherPage || isCoursePage ? (
           <Link href="/">
-            <Button className="sm" variant="ghost">
+            <Button className="sm" variant="secondary">
               <LogOut className="mr-2 h-4 w-4" />
               Exit
             </Button>
           </Link>
         ) : isTeacher(userId) ? (
           <Link href="/teacher/courses">
-            <Button className="sm" variant="ghost">
+            <Button className="sm" variant="default">
               Teacher mode
             </Button>
           </Link>
         ) : (
           <Link href="/teacher/courses">
-            <Button className="sm" variant="ghost">
+            <Button className="sm" variant="default">
               Teacher mode
             </Button>
           </Link>

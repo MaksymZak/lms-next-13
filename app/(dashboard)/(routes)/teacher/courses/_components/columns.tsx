@@ -77,6 +77,30 @@ export const columns: ColumnDef<Course>[] = [
     },
   },
   {
+    accessorKey: "updatedAt",
+    header: () => {
+      return <span>Updated At</span>;
+    },
+    cell: ({ row }) => {
+      const updatedAt = row.getValue("updatedAt");
+      const updatedAtFormate = new Date(String(updatedAt)).toLocaleString();
+
+      return <div>{updatedAtFormate}</div>;
+    },
+  },
+  {
+    accessorKey: "createdAt",
+    header: () => {
+      return <span>Created At</span>;
+    },
+    cell: ({ row }) => {
+      const createdAt = row.getValue("createdAt");
+      const createdAtFormate = new Date(String(createdAt)).toLocaleString();
+
+      return <div>{createdAtFormate}</div>;
+    },
+  },
+  {
     id: "actions",
     cell: ({ row }) => {
       const { id } = row.original;

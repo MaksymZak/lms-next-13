@@ -30,10 +30,15 @@ export const VideoPlayer = ({
   url,
 }: VideoPlayerProps) => {
   const [isReady, setIsReady] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const router = useRouter();
   const confetti = useConfettiStore();
 
   useEffect(() => {}, [isReady]);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const onEnd = async () => {
     try {
@@ -60,10 +65,10 @@ export const VideoPlayer = ({
       toast.error("Something went wrong");
     }
   };
-
+  console.log(!isLocked);
   return (
     <div className="relative aspect-video">
-      {!isReady && !isLocked && (
+      {!isReady && isLocked && (
         <div className="absolute inset-0 flex items-center justify-center bg-slate-800">
           <Loader2 className="h-8 w-8 animate-spin text-secondary" />
         </div>
@@ -75,7 +80,7 @@ export const VideoPlayer = ({
         </div>
       )}
 
-      {!isLocked && url && (
+      {!isLocked && url && isClient && (
         <ReactPlayer
           className={cn(isReady && "hidden")}
           playing
