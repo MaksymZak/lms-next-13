@@ -24,10 +24,7 @@ const SidebarRoutes = () => {
   const routes = isTeacherPage ? teacherRoutes : guestRoutes;
 
   useEffect(() => {
-    guestRoutes.forEach(({ href }) => {
-      router.prefetch(href);
-    });
-    teacherRoutes.forEach(({ href }) => {
+    [...guestRoutes, ...teacherRoutes].forEach(({ href }) => {
       router.prefetch(href);
     });
   }, [router]);
