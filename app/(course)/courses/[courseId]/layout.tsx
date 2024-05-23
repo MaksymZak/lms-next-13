@@ -6,6 +6,8 @@ import { getProgress } from "@/actions/get-progress";
 
 import { CourseSidebar } from "./_components/course-sidebar";
 import { CourseNavbar } from "./_components/course-navbar";
+import { Suspense } from "react";
+import Loader from "@/components/loader/loader";
 
 const CourseLayout = async ({
   children,
@@ -57,7 +59,15 @@ const CourseLayout = async ({
       <div className="fixed inset-y-0 z-50 hidden h-full w-80 flex-col md:flex">
         <CourseSidebar course={course} progressCount={progressCount} />
       </div>
-      <main className="h-full pt-[80px] md:pl-80">{children}</main>
+      <Suspense
+        fallback={
+          <div className="flex h-full w-full items-center justify-center">
+            <Loader />
+          </div>
+        }
+      >
+        {children}
+      </Suspense>
     </div>
   );
 };

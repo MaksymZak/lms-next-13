@@ -65,7 +65,7 @@ export const VideoPlayer = ({
       toast.error("Something went wrong");
     }
   };
-  console.log(!isLocked);
+
   return (
     <div className="relative aspect-video">
       {!isReady && isLocked && (
