@@ -3,7 +3,6 @@
 import { cn } from "@/lib/utils";
 import { LucideIcon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 interface SidebarItemProps {
   icon: LucideIcon;
@@ -23,10 +22,6 @@ const SidebarItem = ({ icon: Icon, label, href }: SidebarItemProps) => {
   const onClick = () => {
     router.push(href);
   };
-
-  useEffect(() => {
-    router.prefetch(href);
-  }, [href, router]);
 
   return (
     <button

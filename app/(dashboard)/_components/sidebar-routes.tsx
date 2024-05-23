@@ -1,9 +1,10 @@
 "use client";
 
 import { Layout, Compass, List, BarChart2 } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import SidebarItem from "./sidebar-item";
+import { useEffect } from "react";
 
 const guestRoutes = [
   { icon: Compass, label: "Browse", href: "/" },
@@ -17,9 +18,20 @@ const teacherRoutes = [
 
 const SidebarRoutes = () => {
   const pathname = usePathname();
+  const router = useRouter();
 
   const isTeacherPage = pathname?.startsWith("/teacher");
   const routes = isTeacherPage ? teacherRoutes : guestRoutes;
+
+  useEffect(() => {
+    guestRoutes.forEach(({ href }) => {
+      router.prefetch(href);
+    });
+    teacherRoutes.forEach(({ href }) => {
+      router.prefetch(href);
+    });
+  }, [router]);
+
   return (
     <div className="flex w-full flex-col">
       {routes.map((item) => (
