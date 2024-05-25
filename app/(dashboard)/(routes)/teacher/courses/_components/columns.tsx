@@ -85,7 +85,7 @@ export const columns: ColumnDef<Course>[] = [
       const updatedAt = row.getValue("updatedAt");
       const updatedAtFormate = new Date(String(updatedAt)).toLocaleString();
 
-      return <div>{updatedAtFormate}</div>;
+      return <p className="whitespace-nowrap">{updatedAtFormate}</p>;
     },
   },
   {
@@ -97,7 +97,7 @@ export const columns: ColumnDef<Course>[] = [
       const createdAt = row.getValue("createdAt");
       const createdAtFormate = new Date(String(createdAt)).toLocaleString();
 
-      return <div>{createdAtFormate}</div>;
+      return <p className="whitespace-nowrap">{createdAtFormate}</p>;
     },
   },
   {

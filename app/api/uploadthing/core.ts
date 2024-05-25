@@ -9,8 +9,11 @@ const handleAuth = () => {
   const { userId } = auth();
   const isAuthorized = isTeacher(userId);
 
-  if (!userId || !isAuthorized)
-    throw new Error("Unauthorized or you are not admin.");
+  if (!userId) throw new Error("Unauthorized or you are not admin.");
+
+  if (!isAuthorized) {
+    throw new Error("You are not admin to upload files, sorry :(");
+  }
 
   return { userId };
 };
