@@ -1,8 +1,8 @@
-import { auth } from "@clerk/nextjs";
+import { auth } from "@/lib/session";
 import { redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
-import { getProgress } from "@/actions/get-progress";
+import { computeProgress } from "@/actions/get-progress";
 
 import { CourseSidebar } from "./_components/course-sidebar";
 import { CourseNavbar } from "./_components/course-navbar";
@@ -16,7 +16,7 @@ const CourseLayout = async ({
   children: React.ReactNode;
   params: { courseId: string };
 }) => {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId) {
     return redirect("/");
@@ -49,7 +49,14 @@ const CourseLayout = async ({
     return redirect("/");
   }
 
-  const progressCount = await getProgress(userId, course.id);
+  // Прогресс считаем из уже загруженных глав (без лишних запросов)
+  const completedChapters = course.chapters.filter(
+    (chapter) => chapter.userProgress?.[0]?.isCompleted,
+  ).length;
+  const progressCount = computeProgress(
+    course.chapters.length,
+    completedChapters,
+  );
 
   return (
     <div className="h-full">

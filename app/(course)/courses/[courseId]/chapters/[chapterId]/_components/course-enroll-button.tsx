@@ -3,6 +3,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/format";
@@ -28,6 +29,8 @@ export const CourseEnrollButton = ({
     setIsClient(true);
   }, []);
 
+  const isFree = !price;
+
   const onClick = async () => {
     try {
       setIsLoading(true);
@@ -37,37 +40,54 @@ export const CourseEnrollButton = ({
       window.location.assign(response.data.url);
     } catch {
       toast.error("Something went wrong");
-    } finally {
       setIsLoading(false);
     }
   };
 
-  return (
-    <>
-      {isClient && (
-        <Popover>
-          <PopoverTrigger>
-            <Button size="sm" className="w-full md:w-auto">
-              Enroll for {formatPrice(price)}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent>
-            <p className="mb-3 text-center text-sm ">
-              Test credit card is <br />
-              4242-4242-4242-4242
-            </p>
+  if (!isClient) {
+    return null;
+  }
 
-            <Button
-              onClick={onClick}
-              disabled={isLoading}
-              size="sm"
-              className="mx-auto block w-auto"
-            >
-              Enroll for {formatPrice(price)}
-            </Button>
-          </PopoverContent>
-        </Popover>
-      )}
-    </>
+  if (isFree) {
+    return (
+      <Button
+        onClick={onClick}
+        disabled={isLoading}
+        size="sm"
+        className="w-full md:w-auto"
+      >
+        {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        Enroll for free
+      </Button>
+    );
+  }
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button size="sm" className="w-full md:w-auto">
+          Enroll for {formatPrice(price)}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent>
+        <p className="mb-3 text-center text-sm">
+          Test credit card is <br />
+          4242-4242-4242-4242
+        </p>
+
+        <Button
+          onClick={onClick}
+          disabled={isLoading}
+          size="sm"
+          className="mx-auto block w-auto"
+        >
+          {isLoading ? (
+            <Loader2 className="mx-auto h-4 w-4 animate-spin" />
+          ) : (
+            <>Enroll for {formatPrice(price)}</>
+          )}
+        </Button>
+      </PopoverContent>
+    </Popover>
   );
 };

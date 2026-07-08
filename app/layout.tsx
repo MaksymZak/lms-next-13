@@ -1,7 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
 import { ToastProvider } from "@/components/providers/toaster-provider";
 import { ConfettiProvider } from "@/components/providers/confetti-provider";
 
@@ -18,19 +17,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <head>
-          <link rel="icon" href="/favicon.ico" sizes="any" />
-        </head>
-        <body className={inter.className}>
-          <ConfettiProvider />
-          {children}
-          <ToastProvider />
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en">
+      <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+      </head>
+      <body className={inter.className}>
+        <ConfettiProvider />
+        {children}
+        <ToastProvider />
+      </body>
+    </html>
   );
 }
-
-// start 4:17:00

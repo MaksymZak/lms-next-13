@@ -1,56 +1,120 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// Prisma schema for the LMS.
+// Docs: docs/ARCHITECTURE.md → "Data model"
 
 datasource db {
   provider = "postgresql"
-  url = env("POSTGRES_URL") // uses connection pooling
-  relationMode = "prisma"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
   provider = "prisma-client-js"
-   previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
+// ---------- Auth (managed by Better Auth) ----------
+
+model User {
+  id            String    @id
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  role          String    @default("student") // "student" | "teacher"
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  sessions Session[]
+  accounts Account[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+// ---------- LMS domain ----------
 
 model Course {
-  id String @id @default(uuid())
-  userId String
-  title String @db.Text
+  id          String  @id @default(uuid())
+  userId      String // owner (teacher), User.id
+  title       String  @db.Text
   description String? @db.Text
-  imageUrl String? @db.Text
-  price Float?
+  imageUrl    String? @db.Text
+  price       Float?
   isPublished Boolean @default(false)
 
   categoryId String?
-  category Category? @relation(fields: [categoryId], references: [id])
+  category   Category? @relation(fields: [categoryId], references: [id])
 
-  chapters Chapter[]
+  chapters    Chapter[]
   attachments Attachment[]
-  purchases Purchase[]
+  purchases   Purchase[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-
   @@index([categoryId])
-  // @@fulltext([title])
+  @@index([userId]) // выборки "мои курсы" и проверки владения
 }
 
 model Category {
-  id String @id @default(uuid())
-  name String @unique
+  id     String   @id @default(uuid())
+  name   String   @unique
   course Course[]
 }
 
-
 model Attachment {
-  id String @id @default(uuid())
+  id   String @id @default(uuid())
   name String
-  url String @db.Text
+  url  String @db.Text
 
   courseId String
-  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -59,18 +123,16 @@ model Attachment {
 }
 
 model Chapter {
-  id String @id @default(uuid())
-  title String
+  id          String  @id @default(uuid())
+  title       String
   description String? @db.Text
-  videoUrl String? @db.Text
-  position Int
+  videoUrl    String? @db.Text
+  position    Int
   isPublished Boolean @default(false)
-  isFree Boolean @default(false)
-
-  muxData MuxData?
+  isFree      Boolean @default(false)
 
   courseId String
- course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   userProgress UserProgress[]
 
@@ -80,48 +142,39 @@ model Chapter {
   @@index([courseId])
 }
 
-model MuxData {
-  id String @id @default(uuid())
-  assetId String
-  playbackId String?
-
-  chapterId String @unique
-  chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
-}
-
 model UserProgress {
-  id String @id @default(uuid())
+  id     String @id @default(uuid())
   userId String
 
   chapterId String
-  chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
 
   isCompleted Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([chapterId])
   @@unique([userId, chapterId])
+  @@index([chapterId])
 }
 
 model Purchase {
-  id String @id @default(uuid())
+  id     String @id @default(uuid())
   userId String
 
   courseId String
-  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt()
+  updatedAt DateTime @updatedAt
 
   @@unique([userId, courseId])
   @@index([courseId])
 }
 
 model StripeCustomer {
-  id String @id @default(uuid())
-  userId String @unique
+  id               String @id @default(uuid())
+  userId           String @unique
   stripeCustomerId String @unique
 
   createdAt DateTime @default(now())

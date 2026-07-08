@@ -1,15 +1,13 @@
-/* eslint-disable */
+import { redirect } from "next/navigation";
 
-// import { isTeacher } from "@/lib/teacher";
-// import { auth } from "@clerk/nextjs";
-// import { redirect } from "next/navigation";
+import { auth } from "@/lib/session";
 
-const TeacherLayout = ({ children }: { children: React.ReactNode }) => {
-  //   const { userId } = auth();
+const TeacherLayout = async ({ children }: { children: React.ReactNode }) => {
+  const { userId } = await auth();
 
-  //   if (!isTeacher(userId)) {
-  //     return redirect("/");
-  //   }
+  if (!userId) {
+    return redirect("/sign-in");
+  }
 
   return <>{children}</>;
 };

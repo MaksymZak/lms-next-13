@@ -1,11 +1,34 @@
-import { authMiddleware } from "@clerk/nextjs";
+import { NextRequest, NextResponse } from "next/server";
+import { getSessionCookie } from "better-auth/cookies";
 
-// This example protects all routes including api/trpc routes
-// Please edit this to allow other routes to be public as needed.
-// See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your middleware
+// Оптимистичная проверка: смотрим только наличие session cookie (без запроса к БД).
+// Реальная валидация сессии происходит на сервере в layouts/pages/route handlers.
+const publicRoutes = ["/sign-in", "/sign-up"];
+const publicApiPrefixes = ["/api/auth", "/api/webhook"];
 
-export default authMiddleware({ publicRoutes: ["/api/webhook"] }); // в масиве указывает публичные роуты на пример "/testPage"
+export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (
+    publicRoutes.includes(pathname) ||
+    publicApiPrefixes.some((prefix) => pathname.startsWith(prefix))
+  ) {
+    return NextResponse.next();
+  }
+
+  const sessionCookie = getSessionCookie(request);
+
+  if (!sessionCookie) {
+    if (pathname.startsWith("/api")) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+    const signInUrl = new URL("/sign-in", request.url);
+    return NextResponse.redirect(signInUrl);
+  }
+
+  return NextResponse.next();
+}
 
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/api(.*)"],
 };

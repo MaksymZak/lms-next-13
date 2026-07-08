@@ -1,7 +1,7 @@
 import { Category, Chapter, Course } from "@prisma/client";
 
 import { db } from "@/lib/db";
-import { getProgress } from "@/actions/get-progress";
+import { getProgressMap } from "@/actions/get-progress";
 
 type CourseWithProgressWithCategory = Course & {
   category: Category;
@@ -40,9 +40,11 @@ export const getDashboardCourses = async (
       (purchase) => purchase.course,
     ) as CourseWithProgressWithCategory[];
 
-    for (let course of courses) {
-      const progress = await getProgress(userId, course.id);
-      course["progress"] = progress;
+    // Прогресс всех курсов одним запросом (без N+1)
+    const progressMap = await getProgressMap(userId, courses);
+
+    for (const course of courses) {
+      course.progress = progressMap[course.id] ?? 0;
     }
 
     const completedCourses = courses.filter(

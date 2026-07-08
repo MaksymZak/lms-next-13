@@ -1,15 +1,15 @@
-import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
-import { utapi, getFileName } from "@/lib/deleteFiels";
 
+import { auth } from "@/lib/session";
 import { db } from "@/lib/db";
+import { deleteFileByUrl } from "@/lib/storage";
 
 export async function DELETE(
   req: Request,
   { params }: { params: { courseId: string; chapterId: string } },
 ) {
   try {
-    const { userId } = auth();
+    const { userId } = await auth();
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -37,9 +37,7 @@ export async function DELETE(
       return new NextResponse("Not Found", { status: 404 });
     }
 
-    if (chapter.videoUrl) {
-      await utapi.deleteFiles(getFileName(chapter.videoUrl));
-    }
+    await deleteFileByUrl(chapter.videoUrl);
 
     const deleteChapter = await db.chapter.delete({
       where: {
@@ -77,7 +75,7 @@ export async function PATCH(
   { params }: { params: { courseId: string; chapterId: string } },
 ) {
   try {
-    const { userId } = auth();
+    const { userId } = await auth();
 
     /* eslint-disable */
     const { isPublished, ...values } = await req.json();
@@ -97,22 +95,19 @@ export async function PATCH(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
+    // При замене видео удаляем предыдущий файл
     if (values.videoUrl) {
-      const resultVideo = await db.chapter.findUnique({
+      const existingChapter = await db.chapter.findUnique({
         where: {
           id: params.chapterId,
         },
       });
 
-      if (resultVideo?.videoUrl) {
-        const response = await db.chapter.findUnique({
-          where: {
-            id: params.chapterId,
-          },
-        });
-
-        const videoPrev = getFileName(response?.videoUrl || "");
-        await utapi.deleteFiles(videoPrev);
+      if (
+        existingChapter?.videoUrl &&
+        existingChapter.videoUrl !== values.videoUrl
+      ) {
+        await deleteFileByUrl(existingChapter.videoUrl);
       }
     }
 
@@ -128,7 +123,7 @@ export async function PATCH(
 
     return NextResponse.json(chapter);
   } catch (error) {
-    console.log("[cOURSES_CHAPTER_ID]", error);
+    console.log("[COURSES_CHAPTER_ID]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

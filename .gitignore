@@ -38,3 +38,8 @@ next-env.d.ts
 
 
 .env
+# local file storage
+/.uploads
+
+# logs
+dev.log

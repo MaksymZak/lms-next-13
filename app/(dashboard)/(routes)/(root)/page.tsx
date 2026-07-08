@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs";
+import { auth } from "@/lib/session";
 import { redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
@@ -6,6 +6,8 @@ import { SearchInput } from "@/components/search-input";
 import { getCourses } from "@/actions/get-courses";
 import { CoursesList } from "@/components/courses-list";
 import { Categories } from "./_components/categories";
+
+export const dynamic = "force-dynamic";
 
 interface SearchPageProps {
   searchParams: {
@@ -15,7 +17,7 @@ interface SearchPageProps {
 }
 
 const SearchPage = async ({ searchParams }: SearchPageProps) => {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId) {
     return redirect("/");

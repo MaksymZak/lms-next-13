@@ -6,14 +6,14 @@ import { Pencil, PlusCircle, Video } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { Chapter, MuxData } from "@prisma/client";
+import { Chapter } from "@prisma/client";
 import ReactPlayer from "react-player";
 
 import { Button } from "@/components/ui/button";
 import FileUpload from "@/components/file-upload";
 
 interface ChapterVideoFormProps {
-  initialData: Chapter & { muxData?: MuxData | null };
+  initialData: Chapter;
   courseId: string;
   chapterId: string;
 }
@@ -86,22 +86,16 @@ export const ChapterVideoForm = ({
       {isEditing && (
         <div className="">
           <FileUpload
-            endpoint="chapterVideo"
-            onChange={(url) => {
-              if (url) {
-                onSubmit({ videoUrl: url });
+            kind="video"
+            onChange={(file) => {
+              if (file) {
+                onSubmit({ videoUrl: file.url });
               }
             }}
           />
           <div className="mt-4 text-xs text-muted-foreground">
             Upload this chapter&apos;s video
           </div>
-        </div>
-      )}
-      {initialData.videoUrl && !isEditing && (
-        <div className="mt-2 text-xs text-muted-foreground">
-          Videos can take a few minutes to process. Refresh the page if video
-          does not appear.
         </div>
       )}
     </div>

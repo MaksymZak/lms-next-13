@@ -13,82 +13,79 @@ export const getChapter = async ({
   chapterId,
 }: GetChapterProps) => {
   try {
-    const purchase = await db.purchase.findUnique({
-      where: {
-        userId_courseId: {
-          userId,
-          courseId,
+    // Независимые запросы — параллельно
+    const [purchase, course, chapter] = await Promise.all([
+      db.purchase.findUnique({
+        where: {
+          userId_courseId: {
+            userId,
+            courseId,
+          },
         },
-      },
-    });
-
-    const course = await db.course.findUnique({
-      where: {
-        isPublished: true,
-        id: courseId,
-      },
-      select: {
-        price: true,
-      },
-    });
-
-    const chapter = await db.chapter.findUnique({
-      where: {
-        id: chapterId,
-        isPublished: true,
-      },
-    });
+      }),
+      db.course.findUnique({
+        where: {
+          isPublished: true,
+          id: courseId,
+        },
+        select: {
+          price: true,
+        },
+      }),
+      db.chapter.findUnique({
+        where: {
+          id: chapterId,
+          isPublished: true,
+        },
+      }),
+    ]);
 
     if (!chapter || !course) {
       throw new Error("Chapter or course not found");
     }
 
-    let muxData = null;
-    let attachments: Attachment[] = [];
-    let nextChapter: Chapter | null = null;
-
-    if (purchase) {
-      attachments = await db.attachment.findMany({
-        where: {
-          courseId: courseId,
-        },
-      });
+    // Не отдаём URL видео закрытой главы: пропсы клиентских компонентов
+    // сериализуются в HTML, даже если плеер не рендерится
+    const hasAccess = chapter.isFree || !!purchase;
+    if (!hasAccess) {
+      chapter.videoUrl = null;
     }
 
-    if (chapter.isFree || purchase) {
-      muxData = await db.muxData.findUnique({
+    const [attachments, nextChapter, userProgress] = await Promise.all([
+      purchase
+        ? db.attachment.findMany({
+            where: {
+              courseId: courseId,
+            },
+          })
+        : Promise.resolve([] as Attachment[]),
+      hasAccess
+        ? db.chapter.findFirst({
+            where: {
+              courseId: courseId,
+              isPublished: true,
+              position: {
+                gt: chapter.position,
+              },
+            },
+            orderBy: {
+              position: "asc",
+            },
+          })
+        : Promise.resolve(null as Chapter | null),
+      db.userProgress.findUnique({
         where: {
-          chapterId: chapterId,
-        },
-      });
-
-      nextChapter = await db.chapter.findFirst({
-        where: {
-          courseId: courseId,
-          isPublished: true,
-          position: {
-            gt: chapter?.position,
+          userId_chapterId: {
+            userId,
+            chapterId,
           },
         },
-        orderBy: {
-          position: "asc",
-        },
-      });
-    }
-
-    const userProgress = await db.userProgress.findUnique({
-      where: {
-        userId_chapterId: {
-          userId,
-          chapterId,
-        },
-      },
-    });
+      }),
+    ]);
 
     return {
       chapter,
       course,
-      muxData,
       attachments,
       nextChapter,
       userProgress,
@@ -99,7 +96,6 @@ export const getChapter = async ({
     return {
       chapter: null,
       course: null,
-      muxData: null,
       attachments: [],
       nextChapter: null,
       userProgress: null,

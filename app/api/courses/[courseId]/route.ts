@@ -1,14 +1,15 @@
-import { auth } from "@clerk/nextjs";
+import { auth } from "@/lib/session";
 import { NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
+import { deleteFileByUrl } from "@/lib/storage";
 
 export async function DELETE(
   req: Request,
   { params }: { params: { courseId: string } },
 ) {
   try {
-    const { userId } = auth();
+    const { userId } = await auth();
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -20,11 +21,8 @@ export async function DELETE(
         userId: userId,
       },
       include: {
-        chapters: {
-          include: {
-            muxData: true,
-          },
-        },
+        chapters: true,
+        attachments: true,
       },
     });
 
@@ -32,17 +30,20 @@ export async function DELETE(
       return new NextResponse("Not found", { status: 404 });
     }
 
-    // for (const chapter of course.chapters) {
-    //   if (chapter.muxData?.assetId) {
-    //     await video.assets.delete(chapter.muxData.chapterId);
-    //   }
-    // }
-
     const deletedCourse = await db.course.delete({
       where: {
         id: params.courseId,
       },
     });
+
+    // Чистим файлы курса после удаления записи (параллельно)
+    await Promise.all([
+      deleteFileByUrl(course.imageUrl),
+      ...course.chapters.map((chapter) => deleteFileByUrl(chapter.videoUrl)),
+      ...course.attachments.map((attachment) =>
+        deleteFileByUrl(attachment.url),
+      ),
+    ]);
 
     return NextResponse.json(deletedCourse);
   } catch (error) {
@@ -56,12 +57,32 @@ export async function PATCH(
   { params }: { params: { courseId: string } },
 ) {
   try {
-    const { userId } = auth();
+    const { userId } = await auth();
     const { courseId } = params;
     const values = await req.json();
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    const ownCourse = await db.course.findUnique({
+      where: {
+        id: courseId,
+        userId,
+      },
+    });
+
+    if (!ownCourse) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    // Смена обложки — удаляем предыдущий файл
+    if (
+      values.imageUrl &&
+      ownCourse.imageUrl &&
+      ownCourse.imageUrl !== values.imageUrl
+    ) {
+      await deleteFileByUrl(ownCourse.imageUrl);
     }
 
     const course = await db.course.update({

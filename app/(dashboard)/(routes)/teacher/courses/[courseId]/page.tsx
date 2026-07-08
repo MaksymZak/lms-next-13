@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 
 import { db } from "@/lib/db";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@/lib/session";
 import { redirect } from "next/navigation";
 
 import IconBadge from "@/components/icon-badge";
@@ -22,7 +22,7 @@ import { Banner } from "@/components/banner";
 import { cn } from "@/lib/utils";
 
 const CourseByIdPage = async ({ params }: { params: { courseId: string } }) => {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId) {
     return redirect("/");

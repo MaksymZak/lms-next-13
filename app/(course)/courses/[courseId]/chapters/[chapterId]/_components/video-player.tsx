@@ -11,7 +11,6 @@ import { cn } from "@/lib/utils";
 import { useConfettiStore } from "@/hooks/use-confetti-store";
 
 interface VideoPlayerProps {
-  playbackId: string;
   courseId: string;
   chapterId: string;
   nextChapterId?: string;
@@ -33,8 +32,6 @@ export const VideoPlayer = ({
   const [isClient, setIsClient] = useState(false);
   const router = useRouter();
   const confetti = useConfettiStore();
-
-  useEffect(() => {}, [isReady]);
 
   useEffect(() => {
     setIsClient(true);

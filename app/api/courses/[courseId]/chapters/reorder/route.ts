@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@/lib/session";
 import { NextResponse } from "next/server";
 
 export async function PUT(
@@ -7,7 +7,7 @@ export async function PUT(
   { params }: { params: { courseId: string } },
 ) {
   try {
-    const { userId } = auth();
+    const { userId } = await auth();
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
@@ -21,9 +21,10 @@ export async function PUT(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    for (let item of list) {
-      await db.chapter.update({
-        where: { id: item.id },
+    for (const item of list) {
+      // updateMany с courseId в where гарантирует, что глава принадлежит курсу
+      await db.chapter.updateMany({
+        where: { id: item.id, courseId: params.courseId },
         data: {
           position: item.position,
         },

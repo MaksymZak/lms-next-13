@@ -1,14 +1,15 @@
-import { auth } from "@clerk/nextjs";
+import { auth } from "@/lib/session";
 import { NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
+import { deleteFileByUrl } from "@/lib/storage";
 
 export async function DELETE(
   req: Request,
   { params }: { params: { courseId: string; attachmentId: string } },
 ) {
   try {
-    const { userId } = auth();
+    const { userId } = await auth();
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -31,6 +32,8 @@ export async function DELETE(
         id: params.attachmentId,
       },
     });
+
+    await deleteFileByUrl(attachment.url);
 
     return NextResponse.json(attachment);
   } catch (error) {

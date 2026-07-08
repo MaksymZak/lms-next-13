@@ -19,7 +19,8 @@ const progressVariants = cva("h-full w-full flex-1 bg-primary transition-all", {
 });
 
 export interface ProgressProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof progressVariants> {}
 
 type CombinedProgressProps = ProgressProps &

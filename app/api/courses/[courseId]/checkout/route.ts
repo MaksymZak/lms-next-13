@@ -1,7 +1,7 @@
 import Stripe from "stripe";
-import { currentUser } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
+import { currentUser } from "@/lib/session";
 import { db } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
 
@@ -12,7 +12,7 @@ export async function POST(
   try {
     const user = await currentUser();
 
-    if (!user || !user.id || !user.emailAddresses?.[0]?.emailAddress) {
+    if (!user || !user.id || !user.email) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
@@ -40,6 +40,27 @@ export async function POST(
       return new NextResponse("Not found", { status: 404 });
     }
 
+    // Бесплатный курс — записываем сразу, без Stripe
+    if (!course.price) {
+      await db.purchase.create({
+        data: {
+          userId: user.id,
+          courseId: course.id,
+        },
+      });
+
+      return NextResponse.json({
+        url: `${process.env.NEXT_PUBLIC_APP_URL}/courses/${course.id}?enrolled=1`,
+      });
+    }
+
+    if (!process.env.STRIPE_API_KEY) {
+      return new NextResponse(
+        "Payments are not configured (STRIPE_API_KEY is missing)",
+        { status: 503 },
+      );
+    }
+
     const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [
       {
         quantity: 1,
@@ -65,7 +86,7 @@ export async function POST(
 
     if (!stripeCustomer) {
       const customer = await stripe.customers.create({
-        email: user.emailAddresses[0].emailAddress,
+        email: user.email,
       });
 
       stripeCustomer = await db.stripeCustomer.create({

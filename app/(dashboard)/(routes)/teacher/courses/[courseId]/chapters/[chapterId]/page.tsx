@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs";
+import { auth } from "@/lib/session";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Eye, LayoutDashboard, Video } from "lucide-react";
@@ -18,7 +18,7 @@ const ChapterIdPage = async ({
 }: {
   params: { courseId: string; chapterId: string };
 }) => {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId) {
     return redirect("/");
@@ -28,9 +28,6 @@ const ChapterIdPage = async ({
     where: {
       id: params.chapterId,
       courseId: params.courseId,
-    },
-    include: {
-      muxData: true,
     },
   });
 

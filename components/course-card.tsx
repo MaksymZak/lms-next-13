@@ -29,7 +29,13 @@ export const CourseCard = ({
     <Link href={`/courses/${id}`} className="">
       <div className="group h-full overflow-hidden rounded-lg border p-3 transition hover:shadow-sm">
         <div className="relative aspect-video w-full overflow-hidden rounded-md">
-          <Image fill className="object-cover" alt={title} src={imageUrl} />
+          <Image
+            fill
+            sizes="(max-width: 1024px) 50vw, 25vw"
+            className="object-cover"
+            alt={title}
+            src={imageUrl}
+          />
         </div>
         <div className="flex flex-col pt-2">
           <div className="line-clamp-2 text-lg font-medium transition group-hover:text-sky-700 md:text-base">
@@ -52,7 +58,7 @@ export const CourseCard = ({
             />
           ) : (
             <p className="text-md font-medium text-slate-700 md:text-sm">
-              {formatPrice(price)}
+              {price ? formatPrice(price) : "Free"}
             </p>
           )}
         </div>

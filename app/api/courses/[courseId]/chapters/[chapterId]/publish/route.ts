@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs";
+import { auth } from "@/lib/session";
 import { NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
@@ -8,7 +8,7 @@ export async function PATCH(
   { params }: { params: { courseId: string; chapterId: string } },
 ) {
   try {
-    const { userId } = auth();
+    const { userId } = await auth();
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -32,15 +32,8 @@ export async function PATCH(
       },
     });
 
-    const muxData = await db.chapter.findUnique({
-      where: {
-        id: params.chapterId,
-      },
-    });
-
     if (
       !chapter ||
-      !muxData ||
       !chapter.title ||
       !chapter.description ||
       !chapter.videoUrl

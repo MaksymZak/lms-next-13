@@ -1,38 +1,48 @@
 import { db } from "@/lib/db";
 
-export const getProgress = async (
+/** Процент завершённых глав. */
+export const computeProgress = (
+  totalChapters: number,
+  completedChapters: number,
+): number =>
+  totalChapters === 0 ? 0 : (completedChapters / totalChapters) * 100;
+
+/**
+ * Прогресс по многим курсам ОДНИМ запросом (каталог, dashboard).
+ * Принимает курсы с уже загруженными id опубликованных глав,
+ * возвращает { courseId: percent }.
+ */
+export const getProgressMap = async (
   userId: string,
-  courseId: string,
-): Promise<number> => {
-  try {
-    const publishedChapters = await db.chapter.findMany({
-      where: {
-        courseId: courseId,
-        isPublished: true,
-      },
-      select: {
-        id: true,
-      },
-    });
+  courses: { id: string; chapters: { id: string }[] }[],
+): Promise<Record<string, number>> => {
+  const chapterIds = courses.flatMap((course) =>
+    course.chapters.map((chapter) => chapter.id),
+  );
 
-    const publishedChapterIds = publishedChapters.map((chapter) => chapter.id);
-
-    const validCompletedChapters = await db.userProgress.count({
-      where: {
-        userId: userId,
-        chapterId: {
-          in: publishedChapterIds,
-        },
-        isCompleted: true,
-      },
-    });
-
-    const progressPercentage =
-      (validCompletedChapters / publishedChapterIds.length) * 100;
-
-    return progressPercentage;
-  } catch (error) {
-    console.log("[GET_PROGRESS]", error);
-    return 0;
+  if (chapterIds.length === 0) {
+    return {};
   }
+
+  const completed = await db.userProgress.findMany({
+    where: {
+      userId,
+      isCompleted: true,
+      chapterId: { in: chapterIds },
+    },
+    select: { chapterId: true },
+  });
+
+  const completedIds = new Set(completed.map((progress) => progress.chapterId));
+
+  return Object.fromEntries(
+    courses.map((course) => [
+      course.id,
+      computeProgress(
+        course.chapters.length,
+        course.chapters.filter((chapter) => completedIds.has(chapter.id))
+          .length,
+      ),
+    ]),
+  );
 };

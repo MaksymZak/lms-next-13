@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs";
+import { auth } from "@/lib/session";
 import { NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
@@ -8,9 +8,9 @@ export async function POST(
   { params }: { params: { courseId: string } },
 ) {
   try {
-    const { userId } = auth();
-    const { url } = await req.json();
-    console.log("userId", userId);
+    const { userId } = await auth();
+    const { url, name } = await req.json();
+
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
@@ -29,7 +29,7 @@ export async function POST(
     const attachment = await db.attachment.create({
       data: {
         url,
-        name: url.split("/").pop(),
+        name: name || url.split("/").pop(),
         courseId: params.courseId,
       },
     });

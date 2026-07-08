@@ -76,10 +76,10 @@ const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
       {isEditing && (
         <div>
           <FileUpload
-            endpoint="courseImage"
-            onChange={(url) => {
-              if (url) {
-                onSubmit({ imageUrl: url });
+            kind="image"
+            onChange={(file) => {
+              if (file) {
+                onSubmit({ imageUrl: file.url });
               }
             }}
           />

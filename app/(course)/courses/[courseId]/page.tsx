@@ -18,7 +18,7 @@ const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
     },
   });
 
-  if (!course) {
+  if (!course || course.chapters.length === 0) {
     return redirect("/");
   }
 
