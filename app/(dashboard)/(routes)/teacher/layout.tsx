@@ -1,12 +1,17 @@
 import { redirect } from "next/navigation";
 
-import { auth } from "@/lib/session";
+import { currentUser } from "@/lib/session";
 
 const TeacherLayout = async ({ children }: { children: React.ReactNode }) => {
-  const { userId } = await auth();
+  const user = await currentUser();
 
-  if (!userId) {
+  if (!user) {
     return redirect("/sign-in");
+  }
+
+  // Раздел преподавателя доступен только роли teacher
+  if (user.role !== "teacher") {
+    return redirect("/");
   }
 
   return <>{children}</>;

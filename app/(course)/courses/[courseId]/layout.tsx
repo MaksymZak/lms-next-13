@@ -66,15 +66,17 @@ const CourseLayout = async ({
       <div className="fixed inset-y-0 z-50 hidden h-full w-80 flex-col md:flex">
         <CourseSidebar course={course} progressCount={progressCount} />
       </div>
-      <Suspense
-        fallback={
-          <div className="flex h-full w-full items-center justify-center">
-            <Loader />
-          </div>
-        }
-      >
-        {children}
-      </Suspense>
+      <main className="h-full pt-[80px] md:pl-80">
+        <Suspense
+          fallback={
+            <div className="flex h-full w-full items-center justify-center">
+              <Loader />
+            </div>
+          }
+        >
+          {children}
+        </Suspense>
+      </main>
     </div>
   );
 };

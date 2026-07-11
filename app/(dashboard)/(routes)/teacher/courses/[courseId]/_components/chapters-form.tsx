@@ -54,6 +54,11 @@ const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
   const { isSubmitting, isValid } = form.formState;
   const { reset } = form;
 
+  const hasChapters = initialData.chapters.length > 0;
+  const hasPublishedChapter = initialData.chapters.some(
+    (chapter) => chapter.isPublished,
+  );
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.post(`/api/courses/${courseId}/chapters`, values);
@@ -151,9 +156,19 @@ const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
         </p>
       )}
 
-      {!isCreating && (
+      {!isCreating && hasChapters && (
         <p className="mt-4 text-xs text-muted-foreground">
           Drag and drop to reorder the chapters
+        </p>
+      )}
+
+      {!isCreating && hasChapters && !hasPublishedChapter && (
+        <p className="mt-2 text-xs text-amber-700">
+          A chapter marked{" "}
+          <span className="font-medium">&quot;Draft&quot;</span> doesn&apos;t
+          count. Click the chapter to add its title, description and video, then
+          press <span className="font-medium">Publish</span> on the chapter page
+          — the course needs at least one published chapter.
         </p>
       )}
     </div>

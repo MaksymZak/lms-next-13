@@ -46,21 +46,31 @@ const CourseByIdPage = async ({ params }: { params: { courseId: string } }) => {
     return redirect("/");
   }
 
+  // Поля, обязательные для публикации. Должны совпадать с проверкой в
+  // POST /api/courses/[courseId]/publish. Цена НЕ обязательна: курс может быть
+  // бесплатным (price 0/null), иначе кнопка Publish висит заблокированной.
   const requiredFields = [
-    course.title,
-    course.description,
-    course.imageUrl,
-    course.price,
-    course.categoryId,
-    course.chapters.some((chapter) => chapter.isPublished),
+    { label: "Title", value: course.title },
+    { label: "Description", value: course.description },
+    { label: "Image", value: course.imageUrl },
+    { label: "Category", value: course.categoryId },
+    {
+      label: "At least one published chapter",
+      value: course.chapters.some((chapter) => chapter.isPublished),
+    },
   ];
 
   const totalFields = requiredFields.length;
-  const completedFields = requiredFields.filter(Boolean).length;
+  const completedFields = requiredFields.filter((field) =>
+    Boolean(field.value),
+  ).length;
+  const missingFields = requiredFields
+    .filter((field) => !field.value)
+    .map((field) => field.label);
 
   const completionText = `${completedFields}/${totalFields}`;
 
-  const isCompleted = requiredFields.every(Boolean);
+  const isCompleted = requiredFields.every((field) => Boolean(field.value));
 
   return (
     <>
@@ -79,6 +89,11 @@ const CourseByIdPage = async ({ params }: { params: { courseId: string } }) => {
             >
               Complete all fields {completionText}
             </span>
+            {missingFields.length > 0 && (
+              <p className="text-xs text-muted-foreground">
+                Still needed: {missingFields.join(", ")}
+              </p>
+            )}
           </div>
           <Actions
             disabled={!isCompleted}

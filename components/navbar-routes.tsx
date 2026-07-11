@@ -6,15 +6,18 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { UserMenu } from "@/components/user-menu";
+import { useSession } from "@/lib/auth-client";
 
 import { SearchInput } from "./search-input";
 
 export const NavbarRoutes = () => {
   const pathname = usePathname();
+  const { data: session } = useSession();
 
   const isTeacherPage = pathname?.startsWith("/teacher");
   const isCoursePage = pathname?.includes("/courses");
   const isSearchPage = pathname === "/";
+  const isTeacher = session?.user?.role === "teacher";
 
   return (
     <>
@@ -32,11 +35,14 @@ export const NavbarRoutes = () => {
             </Button>
           </Link>
         ) : (
-          <Link href="/teacher/courses">
-            <Button size="sm" variant="default">
-              Teacher mode
-            </Button>
-          </Link>
+          // Teacher mode доступен только пользователям с ролью teacher
+          isTeacher && (
+            <Link href="/teacher/courses">
+              <Button size="sm" variant="default">
+                Teacher mode
+              </Button>
+            </Link>
+          )
         )}
         <UserMenu />
       </div>

@@ -30,11 +30,18 @@ export async function DELETE(
       return new NextResponse("Not found", { status: 404 });
     }
 
-    const deletedCourse = await db.course.delete({
-      where: {
-        id: params.courseId,
-      },
-    });
+    // Явно удаляем зависимые записи в транзакции, не полагаясь на каскад в БД:
+    // на некоторых окружениях FK создавались без ON DELETE CASCADE, из-за чего
+    // курсы с покупками/прогрессом удалить не получалось (FK constraint failed).
+    const [, , , , deletedCourse] = await db.$transaction([
+      db.userProgress.deleteMany({
+        where: { chapter: { courseId: params.courseId } },
+      }),
+      db.purchase.deleteMany({ where: { courseId: params.courseId } }),
+      db.attachment.deleteMany({ where: { courseId: params.courseId } }),
+      db.chapter.deleteMany({ where: { courseId: params.courseId } }),
+      db.course.delete({ where: { id: params.courseId } }),
+    ]);
 
     // Чистим файлы курса после удаления записи (параллельно)
     await Promise.all([
